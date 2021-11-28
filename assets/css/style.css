@@ -1,0 +1,36 @@
+body {
+    border: solid 1px black;
+    height: 90vh;
+    margin: 20px;
+    padding: 25px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background-color:purple;
+    border-radius: 5px;
+    color: white;
+}
+
+button:hover {
+    background-color:violet;
+}
+
+.main-page {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px;
+    padding: 20px;
+    
+}
+
+.main-page p {
+    margin: 0 15% 2% 15%;
+}
