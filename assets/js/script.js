@@ -64,24 +64,26 @@ var quizObj = {
     3: questionFour
 };
 
+var quizKeys = Object.keys(quizObj);
 
 function answerHandler(event){
-    // check the answer submission
-    var answer = event.target.innerHTML
+    // variables for answer check
+    var answer = event.target.innerHTML;
     var result = document.getElementById('result');
-    console.log(result);
+
+    // logic for answer check
     if (answer.substring(2).trim() === quizObj[0].answer.trim()){
         // do something when right
         score += 1
         result.innerHTML = 'Correct!';
     } else {
         // do something when wrong
-        result.innerHTML = 'Incorrect!';
+        result.innerHTML = 'Wrong!';
     }
 }
 
 // quiz page change 
-function createQuestion(questionIndex){
+function createQuestion(){
     var answerDivEl = document.createElement('div');
     var questionButton1 = document.createElement('button');
     var questionButton2 = document.createElement('button');
@@ -92,30 +94,64 @@ function createQuestion(questionIndex){
 
     var buttons = [questionButton1, questionButton2, questionButton3, questionButton4];
 
-    // extract question 
-    var questionIndex = 0;
-    mainPageEl.innerHTML = `<h1> ${quizObj[questionIndex][0]}<h3>`;
+    // extract question (dynamic pull)
+    var questionIndex = Math.floor(Math.random() * quizKeys.length);
+    var quizObs = quizObj[quizKeys[questionIndex]];
+    mainPageEl.innerHTML = `<h1> ${quizObs[0]}<h3>`;
 
     // extract answers into buttons 
-    questionButton1.textContent = `1. ${quizObj[questionIndex][1]}`;
-    questionButton2.textContent = `2. ${quizObj[questionIndex][2]}`;
-    questionButton3.textContent = `3. ${quizObj[questionIndex][3]}`;
-    questionButton4.textContent = `4. ${quizObj[questionIndex][4]}`;
+    questionButton1.textContent = `1. ${quizObs[1]}`;
+    questionButton2.textContent = `2. ${quizObs[2]}`;
+    questionButton3.textContent = `3. ${quizObs[3]}`;
+    questionButton4.textContent = `4. ${quizObs[4]}`;
+
+    // remove question from keys
+    quizKeys.splice(questionIndex, 1);
 
     // add class to the buttons
+    // update for css left align
     for (i in buttons){
         buttons[i].className = 'answer-button';
     }
 
     // append buttons to div and then div to main-page
+    answerDivEl.className = 'answer';
     answerDivEl.append(questionButton1, questionButton2, questionButton3, questionButton4);
     mainPageEl.append(answerDivEl, resultEl);
 
-    // add event listener for buttons
-    answerDivEl.addEventListener('click', answerHandler);
+    // when clicked
+    answerDivEl.onclick = function(event){
+
+        // variables for answer check
+        var answer = event.target.innerHTML;
+        var result = document.getElementById('result');
+
+        // logic for answer check
+        if (answer.substring(2).trim() === quizObs.answer.trim()){
+            // do something when right
+            score += 1
+            result.innerHTML = 'Correct!';
+        } else {
+            // do something when wrong
+            result.innerHTML = 'Wrong!';
+        }
+
+        // check for more questions
+        if (quizKeys.length > 0){
+            createQuestion();
+        } else {
+            // Do something when the quiz is done
+            alert('The quiz is complete!');
+        }
+    }
 }
 
-createQuestion();
+// start of quiz function, trigger timer & questions
+function startQuiz(){
+    // start countdown and quiz
+    countDown();
+    createQuestion();
+}
 
-// event listeners
-startButtonEL.addEventListener('click', countDown);
+// event listeners 
+startButtonEL.addEventListener('click', startQuiz);
