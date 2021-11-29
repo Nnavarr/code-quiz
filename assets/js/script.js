@@ -3,21 +3,7 @@ var startButtonEL = document.querySelector('#startButton');
 var timerEl = document.querySelector('#timer');
 var mainPageEl = document.querySelector('.main-page');
 var score = 0;
-
-// countdown functionality
-function countDown() {
-    var timer = 10
-    var updateTimer = setInterval(function() {
-        // decrease timer by 1 second
-        timer -= 1;
-        timerEl.innerHTML = `Time: ${timer}`;
-        // if timer = 0, stop the quiz
-        if (timer === 0){
-            alert('Time is up!');
-            clearInterval(updateTimer);
-        }
-    }, 1000)
-}
+var timer = 10;
 
 // quiz page questions
 var questionOne = {
@@ -66,20 +52,25 @@ var quizObj = {
 
 var quizKeys = Object.keys(quizObj);
 
-function answerHandler(event){
-    // variables for answer check
-    var answer = event.target.innerHTML;
-    var result = document.getElementById('result');
+// countdown functionality
+function countDown() {
+    var updateTimer = setInterval(function() {
+        // decrease timer by 1 second
+        timer -= 1;
+        timerEl.innerHTML = `Time: ${timer}`;
+        // if timer < 1, stop the quiz
+        if (timer <= 0){
+            clearInterval(updateTimer);
 
-    // logic for answer check
-    if (answer.substring(2).trim() === quizObj[0].answer.trim()){
-        // do something when right
-        score += 1
-        result.innerHTML = 'Correct!';
-    } else {
-        // do something when wrong
-        result.innerHTML = 'Wrong!';
-    }
+            // save score
+            saveScore();
+        }
+    }, 1000)
+}
+
+// save score to localStorage
+function saveScore(){
+    mainPageEl.innerHTML = `<h1>All done!</h1> <p>Your final score is ${score}`;
 }
 
 // quiz page change 
@@ -136,12 +127,12 @@ function createQuestion(){
             result.innerHTML = 'Wrong!';
         }
 
-        // check for more questions
+        // check for more questions, end if complete
         if (quizKeys.length > 0){
             createQuestion();
         } else {
             // Do something when the quiz is done
-            alert('The quiz is complete!');
+            timer = 0;
         }
     }
 }
