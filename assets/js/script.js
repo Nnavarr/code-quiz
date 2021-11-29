@@ -60,6 +60,7 @@ function countDown() {
         timerEl.innerHTML = `Time: ${timer}`;
         // if timer < 1, stop the quiz
         if (timer <= 0){
+            timerEl.innerHTML = 'Time: 0'
             clearInterval(updateTimer);
 
             // save score
@@ -70,7 +71,31 @@ function countDown() {
 
 // save score to localStorage
 function saveScore(){
-    mainPageEl.innerHTML = `<h1>All done!</h1> <p>Your final score is ${score}`;
+    // TODO: add css class to make the score larger
+    mainPageEl.innerHTML = `<h1>All done!</h1> <p class='score'>Your final score is ${score}<p>`;
+    
+    // create initials div element
+    var initialDiv = document.createElement('div');
+    var description = document.createElement('p');
+    var input = document.createElement('input');
+    var submitButton = document.createElement('button');
+
+    // update classes 
+    initialDiv.className = 'initials-div';
+    description.innerHTML = 'Enter initials: ';
+    description.id = 'submit-p';
+    submitButton.className = 'submit-button';
+    submitButton.innerHTML = 'Submit';
+    
+    // update input and button element
+    input.setAttribute('type', 'text');
+
+    // append elements to div and mainpage
+    initialDiv.appendChild(description);
+    initialDiv.appendChild(input);
+    initialDiv.appendChild(submitButton);
+    mainPageEl.appendChild(initialDiv);
+
 }
 
 // quiz page change 

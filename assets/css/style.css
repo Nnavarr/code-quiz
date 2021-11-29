@@ -40,3 +40,21 @@ div {
 .main-page p {
     margin: 0 15% 2% 15%;
 }
+
+.main-page .initials-div {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+.submit-button {
+    height: 21px;
+    width: 75.27px;
+    margin-left: 5px;
+}
+
+#submit-p {
+    margin: 0px 5px 0px 0px;
+}
