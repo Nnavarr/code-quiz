@@ -1,3 +1,4 @@
+/* general formatting */
 body {
     border: solid 1px black;
     height: 90vh;
@@ -27,6 +28,7 @@ div {
     align-items: flex-start;
 }
 
+/* main page formatting */
 .main-page {
     align-items: center;
     display: flex;
@@ -49,18 +51,23 @@ div {
     width: 100%;
 }
 
+/* button formattin */
+.answer button {
+    width: 100%;
+    text-align: left;
+}
+
 .submit-button {
     height: 21px;
     width: 75.27px;
     margin-left: 5px;
 }
 
-#submit-p {
-    margin: 0px 5px 0px 0px;
-}
-
 .score-buttons {
     display: flex;
     flex-direction: row;
-    /* flex: 1; */
+}
+
+#submit-p {
+    margin: 0px 5px 0px 0px;
 }
