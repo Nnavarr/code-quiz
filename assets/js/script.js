@@ -5,52 +5,60 @@ var mainPageEl = document.querySelector('.main-page');
 var score = 0;
 var timer = 10;
 
-// quiz page questions
-var questionOne = {
-    0: 'A very useful tool used during development and debugging for printing content to the debugger is:',
-    1: 'JavaScript',
-    2: 'terminal/bash',
-    3: 'for loops',
-    4: 'console.log',
-    'answer': 'console.log'
-};
+function questionCreation(){
+    // quiz page questions
+    var questionOne = {
+        0: 'A very useful tool used during development and debugging for printing content to the debugger is:',
+        1: 'JavaScript',
+        2: 'terminal/bash',
+        3: 'for loops',
+        4: 'console.log',
+        'answer': 'console.log'
+    };
 
-var questionTwo = {
-    0: 'Commonly used data types DO Not Include:',
-    1: 'strings',
-    2: 'booleans',
-    3: 'alerts',
-    4: 'numbers',
-    'answer': 'alerts'
-};
+    var questionTwo = {
+        0: 'Commonly used data types DO Not Include:',
+        1: 'strings',
+        2: 'booleans',
+        3: 'alerts',
+        4: 'numbers',
+        'answer': 'alerts'
+    };
 
-var questionThree = {
-    0: 'The condition in an if / else statement is enclosed with _______.',
-    1: 'quotes',
-    2: 'curly brackets',
-    3: 'parenthesis',
-    4: 'square brackets',
-    'answer': 'parenthesis'
-};
+    var questionThree = {
+        0: 'The condition in an if / else statement is enclosed with _______.',
+        1: 'quotes',
+        2: 'curly brackets',
+        3: 'parenthesis',
+        4: 'square brackets',
+        'answer': 'parenthesis'
+    };
 
-var questionFour = {
-    0: 'Arrays in JavaScript can be used to store _______.',
-    1: 'numbers and strings',
-    2: 'other arrays',
-    3: 'booleans',
-    4: 'all of the above',
-    'answer': 'all of the above'
-};
+    var questionFour = {
+        0: 'Arrays in JavaScript can be used to store _______.',
+        1: 'numbers and strings',
+        2: 'other arrays',
+        3: 'booleans',
+        4: 'all of the above',
+        'answer': 'all of the above'
+    };
 
-// append question objects to single quiz container 
-var quizObj = {
-    0: questionOne,
-    1: questionTwo,
-    2: questionThree,
-    3: questionFour
-};
+    // append question objects to single quiz container 
+    var quizObj = {
+        0: questionOne,
+        1: questionTwo,
+        2: questionThree,
+        3: questionFour
+    };
 
-var quizKeys = Object.keys(quizObj);
+    var quizKeys = Object.keys(quizObj);
+
+    // create object for return 
+    return {
+        quizObj,
+        quizKeys
+    }
+}
 
 // countdown functionality
 function countDown() {
@@ -141,7 +149,7 @@ function saveScore(){
 }
 
 // quiz page change 
-function createQuestion(){
+function createQuestion(quizObj, quizKeys){
     var answerDivEl = document.createElement('div');
     var questionButton1 = document.createElement('button');
     var questionButton2 = document.createElement('button');
@@ -196,7 +204,7 @@ function createQuestion(){
 
         // check for more questions, end if complete
         if (quizKeys.length > 0){
-            createQuestion();
+            createQuestion(quizObj, quizKeys);
         } else {
             // Do something when the quiz is done
             timer = 0;
@@ -204,6 +212,7 @@ function createQuestion(){
     }
 }
 
+// high score function
 function highScores(scoreObj){
     // create list element
     var scoreList = document.createElement('ol');
@@ -230,22 +239,38 @@ function highScores(scoreObj){
     var goBack = document.getElementById('goBack');
     var clearScores = document.getElementById('clearScores');
 
+    goBack.addEventListener('click', mainPage)
     console.log(goBack);
     console.log(clearScores);
-
-    
-
 
 
 }
 
+// generate main page
+function mainPage(){
+    mainPageEl.innerHTML = '<h1>Coding Quiz Challenge</h1> <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds.</p>'
+    
+    // create startButton and append to mainpage
+    var startButton = document.createElement('button');
+    startButton.className='button';
+    startButton.id = 'startButton';
+    startButton.textContent = 'Start Quiz';
+    mainPageEl.appendChild(startButton);
+
+    // reset variables
+    var startButtonEL = document.querySelector('#startButton');
+    timer = 10;
+    startButtonEL.addEventListener('click', startQuiz);
+}
 
 // start of quiz function, trigger timer & questions
 function startQuiz(){
     // start countdown and quiz
+    var quiz = questionCreation();
     countDown();
-    createQuestion();
+    createQuestion(quiz.quizObj, quiz.quizKeys);
 }
 
 // event listeners 
 startButtonEL.addEventListener('click', startQuiz);
+
