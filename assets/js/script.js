@@ -2,6 +2,7 @@
 var startButtonEL = document.querySelector('#startButton');
 var timerEl = document.querySelector('#timer');
 var mainPageEl = document.querySelector('.main-page');
+var highScoreEl = document.querySelector('#high-score');
 var score = 0;
 var timer = 10;
 
@@ -133,17 +134,14 @@ function saveScore(){
             var leaderBoard = [];
             leaderBoard.push(scoreObj);
             localStorage.setItem('leaderboard', JSON.stringify(leaderBoard));
-
             // take user to high score page
             highScores(leaderBoard);
 
         } else {
             leaderBoard.push(scoreObj);
             localStorage.setItem('leaderboard', JSON.stringify(leaderBoard));
-
             // take user to high score page
             highScores(leaderBoard);
-            
         }
     }
 }
@@ -217,12 +215,24 @@ function highScores(scoreObj){
     // create list element
     var scoreList = document.createElement('ol');
     scoreList.className = 'score-list';
+    scoreList.id = 'score-list';
     scoreList.type = '1';
-    for (var i = 0; i < 10; i++){
-        liEl = document.createElement('li');
-        liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
-        liEl.className = 'score-entry';
-        scoreList.appendChild(liEl);
+
+    // show top 10 or all if less
+    if (scoreObj.length > 10) {
+        for (var i = 0; i < 10; i++){
+            liEl = document.createElement('li');
+            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
+            liEl.className = 'score-entry';
+            scoreList.appendChild(liEl);
+        }
+    } else {
+        for (i in scoreObj){
+            liEl = document.createElement('li');
+            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
+            liEl.className = 'score-entry';
+            scoreList.appendChild(liEl);
+        }
     }
 
     // create button div
@@ -239,11 +249,20 @@ function highScores(scoreObj){
     var goBack = document.getElementById('goBack');
     var clearScores = document.getElementById('clearScores');
 
-    goBack.addEventListener('click', mainPage)
-    console.log(goBack);
-    console.log(clearScores);
+    // functions once clicked
+    goBack.addEventListener('click', mainPage);
+    clearScores.addEventListener('click', clearHighScores);
 
+}
 
+// clear high scores at the high scores page
+function clearHighScores(){
+    // clear html element that the user sees
+    var scoreList = document.getElementById('score-list');
+    scoreList.remove();
+
+    // clear local storage
+    localStorage.clear();
 }
 
 // generate main page
@@ -265,7 +284,8 @@ function mainPage(){
 
 // start of quiz function, trigger timer & questions
 function startQuiz(){
-    // start countdown and quiz
+    // reset score, start countdown, and quiz
+    score = 0;
     var quiz = questionCreation();
     countDown();
     createQuestion(quiz.quizObj, quiz.quizKeys);
