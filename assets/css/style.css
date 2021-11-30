@@ -58,3 +58,9 @@ div {
 #submit-p {
     margin: 0px 5px 0px 0px;
 }
+
+.score-buttons {
+    display: flex;
+    flex-direction: row;
+    /* flex: 1; */
+}

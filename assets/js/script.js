@@ -64,13 +64,13 @@ function countDown() {
             clearInterval(updateTimer);
 
             // save score
-            saveScore();
+            quizComplete();
         }
     }, 1000)
 }
 
-// save score to localStorage
-function saveScore(){
+// quiz complete page
+function quizComplete(){
     // TODO: add css class to make the score larger
     mainPageEl.innerHTML = `<h1>All done!</h1> <p class='score'>Your final score is ${score}<p>`;
     
@@ -89,6 +89,8 @@ function saveScore(){
     
     // update input and button element
     input.setAttribute('type', 'text');
+    input.setAttribute('placeholder', 'Enter initials here');
+    input.id = 'initials-input';
 
     // append elements to div and mainpage
     initialDiv.appendChild(description);
@@ -96,6 +98,46 @@ function saveScore(){
     initialDiv.appendChild(submitButton);
     mainPageEl.appendChild(initialDiv);
 
+    // listener element for submission
+    submitButton.addEventListener('click', saveScore)
+}
+
+// save score to localStorage
+function saveScore(){
+    // extract initials from input
+    var initials = document.getElementById('initials-input');
+
+    // check for presence of initials in input
+    if (!initials.value){
+        alert('Please enter initials before submitting your score');
+    } else {
+        var initialVal = initials.value;
+
+        // create initials object
+        var scoreObj = {
+            'initials': initialVal,
+            'score': score
+        }
+
+        // import existing leader board ;create a copy first, then replace (immutable data)
+        var leaderBoard = JSON.parse(localStorage.getItem('leaderboard'));
+        if (!leaderBoard){
+            var leaderBoard = [];
+            leaderBoard.push(scoreObj);
+            localStorage.setItem('leaderboard', JSON.stringify(leaderBoard));
+
+            // take user to high score page
+            highScores(leaderBoard);
+
+        } else {
+            leaderBoard.push(scoreObj);
+            localStorage.setItem('leaderboard', JSON.stringify(leaderBoard));
+
+            // take user to high score page
+            highScores(leaderBoard);
+            
+        }
+    }
 }
 
 // quiz page change 
@@ -161,6 +203,42 @@ function createQuestion(){
         }
     }
 }
+
+function highScores(scoreObj){
+    // create list element
+    var scoreList = document.createElement('ol');
+    scoreList.className = 'score-list';
+    scoreList.type = '1';
+    for (var i = 0; i < 10; i++){
+        liEl = document.createElement('li');
+        liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
+        liEl.className = 'score-entry';
+        scoreList.appendChild(liEl);
+    }
+
+    // create button div
+    var buttonDiv = document.createElement('div');
+    buttonDiv.className = 'score-buttons';
+    buttonDiv.innerHTML = "<button id='goBack'>Go Back</button> <button id='clearScores'>Clear high scores</button>"
+
+    // finalize appending scores to list
+    mainPageEl.innerHTML = '<h1>High Scores</h1>';
+    mainPageEl.appendChild(scoreList);
+    mainPageEl.appendChild(buttonDiv);
+
+    // add listeners for buttons
+    var goBack = document.getElementById('goBack');
+    var clearScores = document.getElementById('clearScores');
+
+    console.log(goBack);
+    console.log(clearScores);
+
+    
+
+
+
+}
+
 
 // start of quiz function, trigger timer & questions
 function startQuiz(){
