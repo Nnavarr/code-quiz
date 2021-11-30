@@ -4,7 +4,8 @@ var timerEl = document.querySelector('#timer');
 var mainPageEl = document.querySelector('.main-page');
 var highScoreEl = document.querySelector('#high-score');
 var score = 0;
-var timer = 10;
+var timer = 75;
+var quizLength = 0;
 
 function questionCreation(){
     // quiz page questions
@@ -53,6 +54,8 @@ function questionCreation(){
     };
 
     var quizKeys = Object.keys(quizObj);
+    // set global variable for length
+    quizLength = quizKeys.length;
 
     // create object for return 
     return {
@@ -81,7 +84,7 @@ function countDown() {
 // quiz complete page
 function quizComplete(){
     // TODO: add css class to make the score larger
-    mainPageEl.innerHTML = `<h1>All done!</h1> <p class='score'>Your final score is ${score}<p>`;
+    mainPageEl.innerHTML = `<h1>All done!</h1> <p class='score'>Your final score is ${score/quizLength * 100}%<p>`;
     
     // create initials div element
     var initialDiv = document.createElement('div');
@@ -192,19 +195,23 @@ function createQuestion(quizObj, quizKeys){
 
         // logic for answer check
         if (answer.substring(2).trim() === quizObs.answer.trim()){
-            // do something when right
+            // add 1 to score and disoplay success result
             score += 1
             result.innerHTML = 'Correct!';
         } else {
-            // do something when wrong
+            // reduce timer by net 10 (9 plus 1 second delay in answer)
             result.innerHTML = 'Wrong!';
+            timer -= 9;
         }
 
         // check for more questions, end if complete
         if (quizKeys.length > 0){
-            createQuestion(quizObj, quizKeys);
+            // pause so user can see answer
+            setTimeout(function(){
+                createQuestion(quizObj, quizKeys)
+            }, 1000);
         } else {
-            // Do something when the quiz is done
+            // set timer 0 when quiz is done
             timer = 0;
         }
     }
@@ -222,14 +229,14 @@ function highScores(scoreObj){
     if (scoreObj.length > 10) {
         for (var i = 0; i < 10; i++){
             liEl = document.createElement('li');
-            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
+            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score/quizLength * 100}%`;
             liEl.className = 'score-entry';
             scoreList.appendChild(liEl);
         }
     } else {
         for (i in scoreObj){
             liEl = document.createElement('li');
-            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score}`;
+            liEl.innerHTML = `${scoreObj[i].initials} - ${scoreObj[i].score/quizLength * 100}%`;
             liEl.className = 'score-entry';
             scoreList.appendChild(liEl);
         }
@@ -275,6 +282,11 @@ function clearHighScores(){
     localStorage.clear();
 }
 
+// sleep processing
+function sleep(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
 // generate main page
 function mainPage(){
     mainPageEl.innerHTML = '<h1>Coding Quiz Challenge</h1> <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds.</p>'
@@ -288,7 +300,7 @@ function mainPage(){
 
     // reset variables
     var startButtonEL = document.querySelector('#startButton');
-    timer = 10;
+    timer = 75;
     startButtonEL.addEventListener('click', startQuiz);
 }
 
