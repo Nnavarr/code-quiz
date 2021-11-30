@@ -255,6 +255,16 @@ function highScores(scoreObj){
 
 }
 
+function highScoresLink(){
+    // check whether a leaderboard is preset. If so, take the user there
+    var leaderBoard = JSON.parse(localStorage.getItem('leaderboard')); 
+    if (!leaderBoard){
+        alert('There are no scores to view');
+    } else {
+        highScores(leaderBoard);
+    }
+}
+
 // clear high scores at the high scores page
 function clearHighScores(){
     // clear html element that the user sees
