@@ -248,7 +248,7 @@ function highScores(scoreObj){
     buttonDiv.innerHTML = "<button id='goBack'>Go Back</button> <button id='clearScores'>Clear scores</button>"
 
     // finalize appending scores to list
-    mainPageEl.innerHTML = '<h1>Recent Scores</h1>';
+    mainPageEl.innerHTML = '<h1>Recent scores</h1>';
     mainPageEl.appendChild(scoreList);
     mainPageEl.appendChild(buttonDiv);
 
